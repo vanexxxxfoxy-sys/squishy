@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Lateness Tracker</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #f1f1f1, #e3f2fd);
+      padding: 20px;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #1565c0;
+      margin-bottom: 30px;
+    }
+
+    .form-container {
+      max-width: 500px;
+      margin: 0 auto 30px auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-left: 8px solid #1565c0;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 600;
+      color: #0d47a1;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 15px;
+      background-color: #1565c0;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #0d47a1;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
+      background-color: white;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: #1976d2;
+      color: white;
+      font-weight: bold;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .delete-btn {
+      background-color: #e53935;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .delete-btn:hover {
+      background-color: #b71c1c;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Student Lateness Tracker</h1>
+
+  <div class="form-container">
+    <form id="latenessForm">
+      <label for="studentName">Student Name:</label>
+      <input type="text" id="studentName" required>
+
+      <label for="date">Date:</label>
+      <input type="date" id="date" required>
+
+      <label for="reason">Reason for Lateness:</label>
+      <textarea id="reason" rows="3" required></textarea>
+
+      <button type="submit">Add Record</button>
+    </form>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Student Name</th>
+        <th>Date</th>
+        <th>Reason</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="latenessTableBody">
+      <!-- Entries will appear here -->
+    </tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById('latenessForm');
+    const tableBody = document.getElementById('latenessTableBody');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('studentName').value.trim();
+      const date = document.getElementById('date').value;
+      const reason = document.getElementById('reason').value.trim();
+
+      if (!name || !date || !reason) return;
+
+      addRecord(name, date, reason);
+      form.reset();
+    });
+
+    function addRecord(name, date, reason) {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td></td>
+        <td>${name}</td>
+        <td>${date}</td>
+        <td>${reason}</td>
+        <td><button class="delete-btn">Delete</button></td>
+      `;
+      tableBody.appendChild(row);
+      updateRowNumbers();
+    }
+
+    function updateRowNumbers() {
+      const rows = tableBody.querySelectorAll('tr');
+      rows.forEach((row, index) => {
+        row.cells[0].textContent = index + 1;
+        const deleteBtn = row.querySelector('.delete-btn');
+        deleteBtn.onclick = () => {
+          row.remove();
+          updateRowNumbers();
+        };
+      });
+    }
+  </script>
+
+</body>
+</html>
